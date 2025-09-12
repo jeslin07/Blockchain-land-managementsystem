@@ -1,0 +1,530 @@
+{% extends 'base.html' %}
+
+{% block title %}Resident Registration - Join LandChain{% endblock %}
+
+{% block extra_css %}
+<style>
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+    }
+    
+    .register-container {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        backdrop-filter: blur(10px);
+        animation: slideInUp 0.8s ease-out;
+    }
+    
+    .floating-welcome {
+        animation: float 4s ease-in-out infinite;
+    }
+    
+    .form-step {
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.5s ease;
+    }
+    
+    .form-step.active {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .progress-step {
+        transition: all 0.3s ease;
+    }
+    
+    .progress-step.completed {
+        background: linear-gradient(45deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .progress-step.active {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .input-floating:focus + .floating-label,
+    .input-floating:not(:placeholder-shown) + .floating-label {
+        transform: translateY(-1.5rem) scale(0.85);
+        color: #667eea;
+    }
+    
+    .floating-label {
+        transition: all 0.3s ease;
+        transform-origin: left;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 py-8 px-4">
+    <div class="container mx-auto max-w-4xl">
+        
+        <!-- Welcome Header -->
+        <div class="text-center mb-12">
+            <div class="floating-welcome w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">
+                <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Welcome</span> to LandChain
+            </h1>
+            <p class="text-xl text-base-content/70 max-w-2xl mx-auto">
+                Join thousands of residents who trust our blockchain technology for secure property management
+            </p>
+        </div>
+
+        <!-- Registration Card -->
+        <div class="card bg-base-100 shadow-2xl rounded-3xl overflow-hidden">
+            
+            <!-- Progress Steps -->
+            <div class="bg-gradient-to-r from-primary/10 to-secondary/10 p-6">
+                <div class="flex justify-center items-center space-x-4">
+                    <div class="progress-step w-10 h-10 rounded-full bg-base-200 flex items-center justify-center font-bold text-sm completed">
+                        1
+                    </div>
+                    <div class="w-16 h-1 bg-base-200 rounded-full">
+                        <div class="w-full h-full bg-primary rounded-full"></div>
+                    </div>
+                    <div class="progress-step w-10 h-10 rounded-full bg-base-200 flex items-center justify-center font-bold text-sm active">
+                        2
+                    </div>
+                    <div class="w-16 h-1 bg-base-200 rounded-full"></div>
+                    <div class="progress-step w-10 h-10 rounded-full bg-base-200 flex items-center justify-center font-bold text-sm">
+                        3
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <span class="text-sm font-medium text-primary">Step 2 of 3: Personal Information</span>
+                </div>
+            </div>
+
+            <div class="p-8 lg:p-12">
+                
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} mb-6 rounded-2xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                                {% if message.tags == 'error' %}
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                {% else %}
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                {% endif %}
+                            </svg>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Registration Form -->
+                <form method="POST" class="space-y-8" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Personal Information Section -->
+                    <div class="form-step active">
+                        <div class="mb-8">
+                            <h3 class="text-2xl font-bold mb-2 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Personal Information
+                            </h3>
+                            <p class="text-base-content/70">Tell us about yourself to create your secure account</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Full Name -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        name="full_name" 
+                                        placeholder=" "
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-primary transition-all duration-300" 
+                                        required
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Full Name *</label>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        placeholder=" "
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-primary transition-all duration-300" 
+                                        required
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Email Address *</label>
+                                </div>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="tel" 
+                                        name="phone" 
+                                        placeholder=" "
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-primary transition-all duration-300" 
+                                        required
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Phone Number *</label>
+                                </div>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="date" 
+                                        name="date_of_birth" 
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-primary transition-all duration-300" 
+                                        required
+                                    />
+                                    <label class="floating-label absolute left-4 top-2 text-base-content/60 pointer-events-none text-sm">Date of Birth *</label>
+                                </div>
+                            </div>
+
+                            <!-- Aadhar Number -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        name="aadhar_number" 
+                                        placeholder=" "
+                                        pattern="[0-9]{12}"
+                                        maxlength="12"
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-primary transition-all duration-300" 
+                                        required
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Aadhar Number (12 digits) *</label>
+                                </div>
+                            </div>
+
+                            <!-- PAN Number -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        name="pan_number" 
+                                        placeholder=" "
+                                        pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                                        maxlength="10"
+                                        style="text-transform: uppercase;"
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-primary transition-all duration-300" 
+                                        required
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">PAN Number *</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Information Section -->
+                    <div class="divider"></div>
+                    
+                    <div>
+                        <div class="mb-6">
+                            <h3 class="text-2xl font-bold mb-2 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                Address Information
+                            </h3>
+                            <p class="text-base-content/70">Your current residential address for verification</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- Full Address -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <textarea 
+                                        name="address" 
+                                        placeholder=" "
+                                        rows="3"
+                                        class="textarea textarea-bordered textarea-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-secondary transition-all duration-300 resize-none" 
+                                        required
+                                    ></textarea>
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Full Address *</label>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- City -->
+                                <div class="form-control">
+                                    <div class="relative">
+                                        <input 
+                                            type="text" 
+                                            name="city" 
+                                            placeholder=" "
+                                            class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-secondary transition-all duration-300" 
+                                            required
+                                        />
+                                        <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">City *</label>
+                                    </div>
+                                </div>
+
+                                <!-- State -->
+                                <div class="form-control">
+                                    <div class="relative">
+                                        <select 
+                                            name="state" 
+                                            class="select select-bordered select-lg w-full rounded-2xl bg-base-100 border-2 focus:border-secondary transition-all duration-300" 
+                                            required
+                                        >
+                                            <option value="">Select State</option>
+                                            <option value="Kerala">Kerala</option>
+                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                            <option value="Karnataka">Karnataka</option>
+                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- PIN Code -->
+                                <div class="form-control">
+                                    <div class="relative">
+                                        <input 
+                                            type="text" 
+                                            name="pincode" 
+                                            placeholder=" "
+                                            pattern="[0-9]{6}"
+                                            maxlength="6"
+                                            class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-secondary transition-all duration-300" 
+                                            required
+                                        />
+                                        <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">PIN Code *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Section -->
+                    <div class="divider"></div>
+                    
+                    <div>
+                        <div class="mb-6">
+                            <h3 class="text-2xl font-bold mb-2 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                Account Security
+                            </h3>
+                            <p class="text-base-content/70">Create a strong password to secure your account</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Password -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="password" 
+                                        name="password" 
+                                        placeholder=" "
+                                        minlength="8"
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-accent transition-all duration-300" 
+                                        required
+                                        id="password"
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Password (min 8 characters) *</label>
+                                </div>
+                                <label class="label">
+                                    <span class="label-text-alt text-xs opacity-70">Use a mix of letters, numbers & special characters</span>
+                                </label>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="form-control">
+                                <div class="relative">
+                                    <input 
+                                        type="password" 
+                                        name="confirm_password" 
+                                        placeholder=" "
+                                        minlength="8"
+                                        class="input input-bordered input-lg w-full rounded-2xl input-floating bg-base-100 border-2 focus:border-accent transition-all duration-300" 
+                                        required
+                                        id="confirm_password"
+                                    />
+                                    <label class="floating-label absolute left-4 top-6 text-base-content/60 pointer-events-none">Confirm Password *</label>
+                                </div>
+                                <label class="label">
+                                    <span class="label-text-alt text-xs" id="password-match"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-start gap-4 p-4 bg-base-200/50 rounded-2xl">
+                            <input type="checkbox" class="checkbox checkbox-primary checkbox-lg" required />
+                            <span class="label-text text-base">
+                                I agree to the 
+                                <a href="#" class="link link-primary font-semibold">Terms of Service</a> 
+                                and 
+                                <a href="#" class="link link-primary font-semibold">Privacy Policy</a>
+                                and confirm that all information provided is accurate.
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg w-full md:w-auto px-12 rounded-2xl text-lg font-semibold shadow-2xl hover:shadow-primary/25 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            </svg>
+                            Create My Account
+                        </button>
+                        
+                        <p class="mt-6 text-base-content/70">
+                            Already have an account? 
+                            <a href="/login" class="link link-primary font-semibold hover:text-secondary transition-colors">Sign in here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Trust Indicators -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <div class="text-center p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg">
+                <div class="w-12 h-12 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold mb-2">100% Secure</h4>
+                <p class="text-sm opacity-70">Your data is protected with bank-level encryption</p>
+            </div>
+            
+            <div class="text-center p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg">
+                <div class="w-12 h-12 bg-info/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold mb-2">Instant Setup</h4>
+                <p class="text-sm opacity-70">Get started in minutes with easy verification</p>
+            </div>
+            
+            <div class="text-center p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg">
+                <div class="w-12 h-12 bg-warning/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 110 19.5 9.75 9.75 0 010-19.5z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold mb-2">24/7 Support</h4>
+                <p class="text-sm opacity-70">Always here to help with any questions</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password matching validation
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const matchIndicator = document.getElementById('password-match');
+        
+        function checkPasswordMatch() {
+            if (confirmPassword.value === '') {
+                matchIndicator.textContent = '';
+                matchIndicator.className = 'label-text-alt text-xs';
+                return;
+            }
+            
+            if (password.value === confirmPassword.value) {
+                matchIndicator.textContent = '✓ Passwords match';
+                matchIndicator.className = 'label-text-alt text-xs text-success';
+                confirmPassword.classList.add('input-success');
+                confirmPassword.classList.remove('input-error');
+            } else {
+                matchIndicator.textContent = '✗ Passwords do not match';
+                matchIndicator.className = 'label-text-alt text-xs text-error';
+                confirmPassword.classList.add('input-error');
+                confirmPassword.classList.remove('input-success');
+            }
+        }
+        
+        password.addEventListener('input', checkPasswordMatch);
+        confirmPassword.addEventListener('input', checkPasswordMatch);
+        
+        // Aadhar number formatting
+        const aadharInput = document.querySelector('input[name="aadhar_number"]');
+        aadharInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        // PIN code formatting
+        const pincodeInput = document.querySelector('input[name="pincode"]');
+        pincodeInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        // Form submission loading state
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Check password match before submission
+            if (password.value !== confirmPassword.value) {
+                e.preventDefault();
+                alert('Please ensure passwords match before submitting.');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span class="loading loading-spinner loading-sm mr-2"></span>
+                Creating Account...
+            `;
+            
+            // Re-enable after timeout (fallback)
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }, 10000);
+        });
+        
+        // Real-time validation for required fields
+        document.querySelectorAll('input[required]').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.checkValidity()) {
+                    this.classList.add('input-success');
+                    this.classList.remove('input-error');
+                } else {
+                    this.classList.add('input-error');
+                    this.classList.remove('input-success');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
