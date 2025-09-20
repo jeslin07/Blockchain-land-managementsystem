@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Land Price Prediction - Kerala Registry{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+  .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Main Container -->
+<div class="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 relative overflow-hidden">
+  
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-400/30 to-indigo-400/30 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr from-blue-400/30 to-violet-400/30 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+    <div class="text-center space-y-8 animate-fadeInUp">
+      <!-- Icon -->
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl shadow-2xl">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      </div>
+      
+      <!-- Title -->
+      <div>
+        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 tracking-tight leading-tight">
+          Land Price Oracle
+        </h1>
+        <p class="mt-6 text-xl sm:text-2xl text-slate-600 font-light max-w-3xl mx-auto leading-relaxed">
+          Discover accurate land valuations across Kerala with our AI-powered prediction system
+        </p>
+      </div>
+      
+      <!-- Stats -->
+      <div class="flex flex-wrap justify-center gap-8 pt-4">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-indigo-600">50K+</div>
+          <div class="text-sm text-slate-500 font-medium">Properties Analyzed</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-purple-600">95%</div>
+          <div class="text-sm text-slate-500 font-medium">Accuracy Rate</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600">14</div>
+          <div class="text-sm text-slate-500 font-medium">Districts Covered</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Card -->
+  <section class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="glass-morphism rounded-3xl shadow-2xl overflow-hidden animate-fadeInUp" style="animation-delay: 0.2s;">
+      
+      <!-- Card Header -->
+      <div class="relative bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-8 py-8">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white mb-2">Price Prediction</h2>
+            <p class="text-purple-100 text-sm">Get instant property valuation estimates</p>
+          </div>
+          <div class="hidden sm:flex items-center space-x-2 text-purple-100">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732L14.146 12.8l-1.179 4.456a1 1 0 01-1.934 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732L9.854 7.2l1.179-4.456A1 1 0 0112 2z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-sm font-medium">AI Powered</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form method="post" class="p-8 space-y-8">
+        {% csrf_token %}
+        
+        <!-- Location Selection -->
+        <div class="space-y-6">
+          <h3 class="text-lg font-semibold text-slate-800 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Location Details
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- District -->
+            <div class="space-y-2">
+              <label for="district" class="block text-sm font-semibold text-slate-700">District</label>
+              <div class="relative">
+                <select id="district" name="district" required
+                  class="w-full appearance-none bg-white border-2 border-slate-200 text-slate-900 rounded-xl px-4 py-4 pr-10 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 font-medium">
+                  <option value="" selected disabled>Select your district</option>
+                  <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                  <option value="Kollam">Kollam</option>
+                  <option value="Pathanamthitta">Pathanamthitta</option>
+                  <option value="Alappuzha">Alappuzha</option>
+                  <option value="Kottayam">Kottayam</option>
+                  <option value="Idukki">Idukki</option>
+                  <option value="Ernakulam">Ernakulam</option>
+                  <option value="Thrissur">Thrissur</option>
+                  <option value="Palakkad">Palakkad</option>
+                  <option value="Malappuram">Malappuram</option>
+                  <option value="Kozhikode">Kozhikode</option>
+                  <option value="Wayanad">Wayanad</option>
+                  <option value="Kannur">Kannur</option>
+                  <option value="Kasaragod">Kasaragod</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Locality -->
+            <div class="space-y-2">
+              <label for="locality" class="block text-sm font-semibold text-slate-700">Locality</label>
+              <div class="relative">
+                <select id="locality" name="locality" required disabled
+                  class="w-full appearance-none bg-white border-2 border-slate-200 text-slate-900 rounded-xl px-4 py-4 pr-10 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 font-medium disabled:bg-slate-50 disabled:text-slate-400">
+                  <option value="" selected disabled>Choose district first</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Property Details -->
+        <div class="space-y-6">
+          <h3 class="text-lg font-semibold text-slate-800 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+            </svg>
+            Property Information
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Area -->
+            <div class="space-y-2">
+              <label for="area_sqft" class="block text-sm font-semibold text-slate-700">Area (sq.ft)</label>
+              <div class="relative">
+                <input id="area_sqft" name="area_sqft" type="number" min="1" step="1" placeholder="Enter area in sq.ft"
+                  class="w-full border-2 border-slate-200 text-slate-900 rounded-xl px-4 py-4 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 font-medium" />
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span class="text-slate-400 text-sm font-medium">sq.ft</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500 flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Optional field - helps improve accuracy
+              </p>
+            </div>
+
+            <!-- Property Type -->
+            <div class="space-y-2">
+              <label for="property_type" class="block text-sm font-semibold text-slate-700">Property Type</label>
+              <div class="relative">
+                <select id="property_type" name="property_type"
+                  class="w-full appearance-none bg-white border-2 border-slate-200 text-slate-900 rounded-xl px-4 py-4 pr-10 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 font-medium">
+                  <option value="residential" selected>Residential</option>
+                  <option value="commercial">Commercial</option>
+                  <option value="agricultural">Agricultural</option>
+                  <option value="industrial">Industrial</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button type="submit"
+            class="group w-full relative inline-flex items-center justify-center px-8 py-5 text-lg font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-purple-200 transform hover:scale-[1.02] transition-all duration-200 shadow-2xl">
+            <svg class="w-6 h-6 mr-3 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Predict Land Price
+            <div class="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+          </button>
+        </div>
+      </form>
+
+      <!-- Result Section -->
+      {% if predicted_price %}
+      <div class="mx-8 mb-8 animate-fadeInUp" style="animation-delay: 0.4s;">
+        <div class="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-2xl p-8 shadow-lg">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-emerald-800">Prediction Complete</h3>
+                <p class="text-emerald-600 text-sm">Based on current market data</p>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+              <div class="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse"></div>
+              Live Data
+            </span>
+          </div>
+          
+          <div class="bg-white/80 rounded-xl p-6 mb-4">
+            <div class="text-center">
+              <p class="text-sm font-medium text-slate-600 mb-2">Estimated Land Value</p>
+              <p class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600 mb-2">₹ {{ predicted_price|floatformat:0 }}</p>
+              {% if selected_district and selected_locality %}
+                <p class="text-sm text-slate-500">{{ selected_locality }}, {{ selected_district }}</p>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap gap-4 text-xs">
+            <div class="flex items-center text-slate-600">
+              <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+              Market Analysis
+            </div>
+            <div class="flex items-center text-slate-600">
+              <div class="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+              AI Prediction
+            </div>
+            <div class="flex items-center text-slate-600">
+              <div class="w-2 h-2 bg-emerald-400 rounded-full mr-2"></div>
+              Real-time Data
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fadeInUp" style="animation-delay: 0.6s;">
+      <div class="text-center p-6 rounded-2xl bg-white/40 backdrop-blur-lg">
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Accurate Predictions</h3>
+        <p class="text-slate-600 text-sm">AI-powered analysis of market trends and property data</p>
+      </div>
+      
+      <div class="text-center p-6 rounded-2xl bg-white/40 backdrop-blur-lg">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Instant Results</h3>
+        <p class="text-slate-600 text-sm">Get property valuations in seconds, not days</p>
+      </div>
+      
+      <div class="text-center p-6 rounded-2xl bg-white/40 backdrop-blur-lg">
+        <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Trusted Data</h3>
+        <p class="text-slate-600 text-sm">Based on official registry records and market data</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Enhanced JavaScript -->
+<script>
+(function() {
+  const districtEl = document.getElementById('district');
+  const localityEl = document.getElementById('locality');
+  
+  // Enhanced locality mapping
+  const localityMap = {
+    'Thiruvananthapuram': ['Pattom', 'Kowdiar', 'Kazhakkoottam', 'Technopark', 'Medical College', 'Vellayambalam'],
+    'Ernakulam': ['Kochi', 'Kalamassery', 'Thrikkakara', 'Aluva', 'Edappally', 'Kakkanad'],
+    'Kozhikode': ['Calicut', 'Mavoor', 'Mukkam', 'Thamarassery', 'Koduvally'],
+    'Kottayam': ['Baker Junction', 'MC Road', 'Nagambadom', 'Puthuppally'],
+    'Thrissur': ['East Fort', 'Swaraj Round', 'Ollur', 'Irinjalakuda'],
+    'Kollam': ['Chinnakada', 'Asramam', 'Karunagappally', 'Punalur'],
+    'Alappuzha': ['Boat Jetty', 'Mullakkal', 'Cherthala', 'Haripad'],
+    'Palakkad': ['Town', 'Shoranur', 'Ottapalam', 'Chittur'],
+    'Malappuram': ['Mini Civil Station', 'Kondotty', 'Perinthalmanna', 'Manjeri'],
+    'Kannur': ['Fort Road', 'Taliparamba', 'Payyanur', 'Iritty'],
+    'Kasaragod': ['Town', 'Kanhangad', 'Nileshwar', 'Bekal'],
+    'Pathanamthitta': ['Town', 'Adoor', 'Thiruvalla', 'Ranni'],
+    'Idukki': ['Painavu', 'Munnar', 'Thodupuzha', 'Kumily'],
+    'Wayanad': ['Kalpetta', 'Sultan Bathery', 'Mananthavady', 'Vythiri']
+  };
+
+  function populateLocalities(district) {
+    const localities = localityMap[district] || [];
+    localityEl.innerHTML = '';
+    
+    const placeholder = document.createElement('option');
+    placeholder.textContent = localities.length ? 'Choose locality' : 'No localities available';
+    placeholder.value = '';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    localityEl.appendChild(placeholder);
+
+    localities.forEach(locality => {
+      const option = document.createElement('option');
+      option.value = locality;
+      option.textContent = locality;
+      localityEl.appendChild(option);
+    });
+
+    localityEl.disabled = localities.length === 0;
+    localityEl.classList.remove('disabled:bg-slate-50', 'disabled:text-slate-400');
+    if (localities.length === 0) {
+      localityEl.classList.add('disabled:bg-slate-50', 'disabled:text-slate-400');
+    }
+  }
+
+  districtEl?.addEventListener('change', (e) => {
+    populateLocalities(e.target.value);
+  });
+
+  // Add smooth scroll behavior
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      const button = form.querySelector('button[type="submit"]');
+      const originalText = button.innerHTML;
+      button.innerHTML = `
+        <svg class="w-5 h-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Analyzing...
+      `;
+      button.disabled = true;
+      
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }, 2000);
+    });
+  });
+})();
+</script>
+{% endblock %}

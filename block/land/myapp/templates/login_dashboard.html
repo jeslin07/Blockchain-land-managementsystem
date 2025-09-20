@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resident Dashboard{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #1a1a1a;
+        --secondary: #f8f9fa;
+        --accent: #3b82f6;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --border: #e5e7eb;
+        --card-bg: #ffffff;
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    .dashboard {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+        min-height: 100vh;
+    }
+
+    .header {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), #8b5cf6, #ec4899);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .welcome {
+        flex: 1;
+    }
+
+    .welcome h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        color: var(--primary);
+        letter-spacing: -0.025em;
+    }
+
+    .welcome p {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    .logout-btn {
+        background: transparent;
+        border: 2px solid var(--border);
+        color: var(--text-secondary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .logout-btn:hover {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #dc2626;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 1.75rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+
+    .stat-number {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0 0 0.25rem 0;
+        letter-spacing: -0.025em;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-icon::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--accent), #8b5cf6);
+        opacity: 0.1;
+        border-radius: 16px;
+    }
+
+    .feature-icon i {
+        color: var(--accent);
+        z-index: 1;
+    }
+
+    .feature-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0 0 0.75rem 0;
+        letter-spacing: -0.025em;
+    }
+
+    .feature-desc {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0 0 1.5rem 0;
+    }
+
+    .feature-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.875rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .feature-btn:hover {
+        background: #374151;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .activity-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+    }
+
+    .activity-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .activity-header h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .activity-item {
+        padding: 1rem;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s ease;
+        position: relative;
+        padding-left: 2.5rem;
+    }
+
+    .activity-item::before {
+        content: '';
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    .activity-item:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.95rem;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .activity-desc {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        color: var(--text-secondary);
+        font-style: italic;
+        padding: 2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard {
+            padding: 1rem;
+        }
+        
+        .header {
+            padding: 1.5rem;
+        }
+        
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .welcome h1 {
+            font-size: 1.75rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .feature-card {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="welcome">
+                <h1>Welcome back, {{ name }}</h1>
+                <p>Manage your land transactions with complete transparency and blockchain security</p>
+            </div>
+            <a href="{% url 'customer_logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Sign Out
+            </a>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ owned_properties_count|default:3 }}</div>
+            <p class="stat-label">Owned Properties</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ active_transactions_count|default:2 }}</div>
+            <p class="stat-label">Active Transactions</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ certificates_count|default:5 }}</div>
+            <p class="stat-label">Certificates</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ verified_docs_count|default:8 }}</div>
+            <p class="stat-label">Verified Documents</p>
+        </div>
+    </div>
+    
+    <!-- Features Grid -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <h3 class="feature-title">My Properties</h3>
+            <p class="feature-desc">View all your owned land parcels with blockchain-verified ownership records and complete transaction history.</p>
+            <a href="{% url 'view_properties' %}" class="feature-btn">
+                <i class="fas fa-arrow-right"></i>
+                View Properties
+            </a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <h3 class="feature-title">New Transaction</h3>
+            <p class="feature-desc">Initiate land transactions with guided workflows for sale, gift, partition, lease, or other deed types.</p>
+            <a href="{% url 'my_requests' %}" class="feature-btn">
+                <i class="fas fa-arrow-right"></i>
+                Start Transaction
+            </a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3 class="feature-title">Documents</h3>
+            <p class="feature-desc">Upload and manage documents with cryptographic integrity checks and blockchain anchoring.</p>
+            <a href="{% url 'document_center' %}" class="feature-btn">
+                <i class="fas fa-arrow-right"></i>
+                Manage Documents
+            </a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-certificate"></i>
+            </div>
+            <h3 class="feature-title">Certificates</h3>
+            <p class="feature-desc">Access blockchain-verified land certificates with QR verification and instant download capability.</p>
+            <a href="{% url 'certificate_wallet' %}" class="feature-btn">
+                <i class="fas fa-arrow-right"></i>
+                View Certificates
+            </a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <h3 class="feature-title">Verify Certificates</h3>
+            <p class="feature-desc">Instantly verify any land certificate against blockchain records using QR codes - no login required.</p>
+            <a href="{% url 'qr_verification' %}" class="feature-btn">
+                <i class="fas fa-arrow-right"></i>
+                Verify Now
+            </a>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="feature-title">Property Valuation</h3>
+            <p class="feature-desc">Get AI-powered price estimates for your land parcels based on location, market trends, and historical data.</p>
+            <a href="{% url 'property_valuation' %}" class="feature-btn">
+                <i class="fas fa-arrow-right"></i>
+                Get Valuation
+            </a>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="activity-section">
+        <div class="activity-header">
+            <i class="fas fa-clock" style="color: var(--accent);"></i>
+            <h3>Recent Activity</h3>
+        </div>
+        {% if recent_activities %}
+            {% for activity in recent_activities %}
+                <div class="activity-item">
+                    <div class="activity-title">{{ activity.action }}</div>
+                    <div class="activity-desc">{{ activity.description }} • {{ activity.timestamp|date:"M d, Y g:i A" }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                <p>No recent activity to display</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
